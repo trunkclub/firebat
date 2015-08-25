@@ -1,0 +1,4 @@
+# Flare
+
+Flare is a utility for generating smoke tests and integration tests against
+distributed systems.
