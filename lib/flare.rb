@@ -1,6 +1,24 @@
 require 'httparty'
 
 module Flare
+  class Logger
+    def log(message)
+      puts(message)
+    end
+  end
+
+  @@_logger = Logger.new
+
+  def logger=(logger)
+    @@_logger = logger
+  end
+  module_function :logger=
+
+  def log(message)
+    @@_logger.log(message)
+  end
+  module_function :log
+
   class Runner
     attr_reader :service, :action, :options, :block
 
@@ -32,20 +50,20 @@ module Flare
       HTTParty.post(base_url + url, {
         body: body,
         headers: headers
-      }).tap { |r| puts r if DEBUG }
+      }).tap { |r| Flare.log r if DEBUG }
     end
 
     def get(url)
       HTTParty.get(base_url + url, {
         headers: headers
-      }).tap { |r| puts r if DEBUG }
+      }).tap { |r| Flare.log r if DEBUG }
     end
 
     def put(url, body)
       HTTParty.put(base_url + url, {
         body: body,
         headers: headers
-      }).tap { |r| puts r if DEBUG }
+      }).tap { |r| Flare.log r if DEBUG }
     end
   end
 
@@ -129,4 +147,4 @@ module Flare
       end
     end
   end
-end  
+end
