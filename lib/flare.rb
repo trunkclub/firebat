@@ -53,14 +53,22 @@ module Flare
       }).tap { |r| Flare.log r if DEBUG }
     end
 
-    def get(url)
+    def get(url, query = {})
       HTTParty.get(base_url + url, {
+        headers: headers,
+        query: query
+      }).tap { |r| Flare.log r if DEBUG }
+    end
+
+    def put(url, body = {})
+      HTTParty.put(base_url + url, {
+        body: body,
         headers: headers
       }).tap { |r| Flare.log r if DEBUG }
     end
 
-    def put(url, body)
-      HTTParty.put(base_url + url, {
+    def patch(url, body = {})
+      HTTParty.patch(base_url + url, {
         body: body,
         headers: headers
       }).tap { |r| Flare.log r if DEBUG }
@@ -105,10 +113,15 @@ module Flare
           block: block
         )
       end
+
+      def result(result)
+        @_result = result
+      end
     end
 
     KNOWN_BEHAVIOR_KEYS = [
-      :times
+      :times,
+      :with
     ]
 
     def self.non_behavioral_options(options = {})
@@ -134,16 +147,38 @@ module Flare
       end
     end
 
-    def self.run!
-      steps.each do |step|
-        times = step.options.fetch(:times, 1).to_i
-        times.times do
-          options = resolve_options(non_behavioral_options(step.options))
+    def self.run!(input = {})
+      @_input = input
 
-          runner = runners[step.service.to_sym] ||= step.service.new
-          result = runner.send(step.action, options)
-          step.block.call(result) if step.block
+      steps.each do |step|
+        options = resolve(step.options)
+        times = options.fetch(:times, 1).to_i
+        with = options.fetch(:with, nil)
+        if with
+          with = resolve(with)
+          with.each do |item|
+            options = options.merge(item)
+            options = resolve_options(non_behavioral_options(options))
+
+            runner = runners[step.service.to_sym] ||= step.service.new
+            result = runner.send(step.action, options)
+            step.block.call(result) if step.block
+          end
+        else
+          times.times do
+            options = resolve_options(non_behavioral_options(options))
+
+            runner = runners[step.service.to_sym] ||= step.service.new
+            result = runner.send(step.action, options)
+            step.block.call(result) if step.block
+          end
         end
+      end
+
+      if @_result.respond_to?(:call)
+        @_result.call
+      else
+        @_result
       end
     end
   end
