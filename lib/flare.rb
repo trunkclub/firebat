@@ -83,6 +83,29 @@ module Flare
     end
   end
 
+  class Process
+    class << self
+      def flows
+        @_flows ||= []
+      end
+
+      def flow(klass)
+        flows << klass
+      end
+
+      def run!
+        prior_result = nil
+        flows.each do |flow|
+          if prior_result
+            prior_result = flow.send(:run!, prior_result)
+          else
+            prior_result = flow.send(:run!)
+          end
+        end
+      end
+    end
+  end
+
   class Flow
     class << self
       def blocks
