@@ -184,6 +184,10 @@ module Flare
             options = resolve_options(non_behavioral_options(options))
 
             runner = runners[step.service.to_sym] ||= step.service.new
+            puts '='*100
+            puts "#{runner.to_s} => #{step.action.to_s}"
+            puts options.inspect
+            puts '='*100
             result = runner.send(step.action, options)
             step.block.call(result) if step.block
           end
