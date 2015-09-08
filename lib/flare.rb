@@ -39,7 +39,7 @@ module Flare
     end
 
     def headers
-      @@_headers ||= {}
+      (@@_headers ||= {})
     end
 
     def base_url
@@ -63,7 +63,7 @@ module Flare
     def put(url, body = {})
       HTTParty.put(base_url + url, {
         body: body,
-        headers: headers
+        headers: headers.merge({ 'Content-Type' => 'application/json' })
       }).tap { |r| Flare.log r if DEBUG }
     end
 
@@ -184,18 +184,27 @@ module Flare
             options = resolve_options(non_behavioral_options(options))
 
             runner = runners[step.service.to_sym] ||= step.service.new
+
             Flare.log '='*100
             Flare.log "#{runner.to_s} => #{step.action.to_s}"
             Flare.log options.inspect
             Flare.log '='*100
+            3.times { puts }
+
             result = runner.send(step.action, options)
             step.block.call(result) if step.block
           end
         else
           times.times do
             options = resolve_options(non_behavioral_options(options))
-
             runner = runners[step.service.to_sym] ||= step.service.new
+
+            Flare.log '='*100
+            Flare.log "#{runner.to_s} => #{step.action.to_s}"
+            Flare.log options.inspect
+            Flare.log '='*100
+            3.times { puts }
+
             result = runner.send(step.action, options)
             step.block.call(result) if step.block
           end
