@@ -1,5 +1,5 @@
 require './lib/flare'
 
-describe 'flare' do
+describe Flare do
 
 end

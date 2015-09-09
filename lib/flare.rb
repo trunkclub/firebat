@@ -180,49 +180,33 @@ module Flare
         options = resolve(step.options)
         times = options.fetch(:times, 1).to_i
         with = options.fetch(:with, nil)
-        if with
-          with = resolve(with)
-          with.each do |item|
-            options = options.merge(item)
-            options = resolve_options(non_behavioral_options(options))
 
-            runner = runners[step.service.to_sym] ||= step.service.new
-
-            Flare.log \
-              %Q(
-                #{'='*100}
-                #{runner.to_s} => #{step.action.to_s}
-                #{options.inspect}
-                #{'='*100}
-              )
-
-            result = runner.send(step.action, options)
-            step.block.call(result) if step.block
+        set, operation =
+          if with
+            [resolve(with), :each]
+          else
+            [times, :times]
           end
-        else
-          times.times do
-            options = resolve_options(non_behavioral_options(options))
-            runner = runners[step.service.to_sym] ||= step.service.new
 
-            Flare.log \
-              %Q(
-                #{'='*100}
-                #{runner.to_s} => #{step.action.to_s}
-                #{options.inspect}
-                #{'='*100}
-              )
+        set.send(operation) do |item|
+          options = options.merge(item) if operation == :each
+          options = resolve_options(non_behavioral_options(options))
+          runner = runners[step.service.to_sym] ||= step.service.new
 
-            result = runner.send(step.action, options)
-            step.block.call(result) if step.block
-          end
+          Flare.log \
+            %Q(
+              #{'='*100}
+              #{runner.to_s} => #{step.action.to_s}
+              #{options.inspect}
+              #{'='*100}
+            )
+
+          result = runner.send(step.action, options)
+          step.block.call(result) if step.block
         end
       end
 
-      if @_result.respond_to?(:call)
-        @_result.call
-      else
-        @_result
-      end
+      @_result.respond_to?(:call) ? @_result.call : @_result
     end
   end
 end
