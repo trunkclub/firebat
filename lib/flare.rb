@@ -92,18 +92,15 @@ module Flare
         @_flows ||= []
       end
 
-      def flow(klass)
-        flows << klass
+      def flow(klass, options = {})
+        flows << { klass: klass, options: options }
       end
 
       def run!
-        prior_result = nil
+        prior_result = {}
         flows.each do |flow|
-          if prior_result
-            prior_result = flow.send(:run!, prior_result)
-          else
-            prior_result = flow.send(:run!)
-          end
+          params = prior_result.merge(flow[:options])
+          prior_result = flow[:klass].send(:run!, params)
         end
       end
     end
