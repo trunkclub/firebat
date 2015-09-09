@@ -157,6 +157,8 @@ module Flare
       if v.is_a?(Flare::Runner)
         runners[v.service.to_sym] ||= v.service.new
         runners[v.service.to_sym].send(v.action)
+      elsif v.is_a?(Symbol)
+        self.send(v)
       elsif v.respond_to?(:call)
         v.call
       else
@@ -199,11 +201,23 @@ module Flare
             )
 
           result = runner.send(step.action, options)
-          step.block.call(result) if step.block
+          if step.block && step.block.respond_to?(:call)
+            step.block.call(result)
+          elsif step.block && step.block.is_a?(Symbol)
+            self.send(step.block, result)
+          else
+            result
+          end
         end
       end
 
-      @_result.respond_to?(:call) ? @_result.call : @_result
+      if @_result.respond_to?(:call)
+        @_result.call
+      elsif self.respond_to?(:result)
+        self.result
+      else
+        @_result
+      end
     end
   end
 end
