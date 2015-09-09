@@ -1,4 +1,7 @@
 require 'httparty'
+require 'dotenv'
+
+Dotenv.load
 
 module Flare
   class Logger
@@ -185,11 +188,13 @@ module Flare
 
             runner = runners[step.service.to_sym] ||= step.service.new
 
-            Flare.log '='*100
-            Flare.log "#{runner.to_s} => #{step.action.to_s}"
-            Flare.log options.inspect
-            Flare.log '='*100
-            3.times { puts }
+            Flare.log \
+              %Q(
+                #{'='*100}
+                #{runner.to_s} => #{step.action.to_s}
+                #{options.inspect}
+                #{'='*100}
+              )
 
             result = runner.send(step.action, options)
             step.block.call(result) if step.block
@@ -199,11 +204,13 @@ module Flare
             options = resolve_options(non_behavioral_options(options))
             runner = runners[step.service.to_sym] ||= step.service.new
 
-            Flare.log '='*100
-            Flare.log "#{runner.to_s} => #{step.action.to_s}"
-            Flare.log options.inspect
-            Flare.log '='*100
-            3.times { puts }
+            Flare.log \
+              %Q(
+                #{'='*100}
+                #{runner.to_s} => #{step.action.to_s}
+                #{options.inspect}
+                #{'='*100}
+              )
 
             result = runner.send(step.action, options)
             step.block.call(result) if step.block
