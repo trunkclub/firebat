@@ -1,7 +1,5 @@
-module MockAdapter
-  extend self
-
-  def get(base_url, url, query = {}, headers)
+class MockAdapter
+  def self.get(base_url, url, query = {}, headers)
 
   end
 end
