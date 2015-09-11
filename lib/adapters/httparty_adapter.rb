@@ -1,37 +1,39 @@
 module Flare
-  module UsesHttp
-    def post(url, body)
+  module HTTPartyAdapter
+    extend self
+
+    def post(base_url, url, body, headers = {})
       HTTParty.post(base_url + url, {
         body: body,
         headers: headers
-      }).tap { |r| Flare.log r if DEBUG }
+      })
     end
 
-    def get(url, query = {})
+    def get(base_url, url, query = {}, headers = {})
       HTTParty.get(base_url + url, {
         headers: headers,
         query: query
-      }).tap { |r| Flare.log r if DEBUG }
+      })
     end
 
-    def put(url, body = {})
+    def put(base_url, url, body = {}, headers = {})
       HTTParty.put(base_url + url, {
         body: body,
-        headers: headers.merge({ 'Content-Type' => 'application/json' })
-      }).tap { |r| Flare.log r if DEBUG }
+        headers: headers
+      })
     end
 
-    def patch(url, body = {})
+    def patch(base_url, url, body = {}, headers = {})
       HTTParty.patch(base_url + url, {
         body: body,
         headers: headers
-      }).tap { |r| Flare.log r if DEBUG }
+      })
     end
 
-    def delete(url)
+    def delete(base_url, url, body = {}, headers = {})
       HTTParty.delete(base_url + url, {
         headers: headers
-      }).tap { |r| Flare.log r if DEBUG }
+      })
     end
   end
 end

@@ -1,10 +1,17 @@
 require 'mocks/constants'
+require 'mocks/mock_service'
+require 'mocks/http_override_service'
+
+class HttpOverrideFlow < Flare::Flow
+  step \
+    HttpOverrideService,
+    :get_a_thing
+end
 
 class GetFlow < Flare::Flow
   step \
     MockService,
-    :get_a_thing,
-    {}
+    :get_a_thing
 end
 
 class PostFlow < Flare::Flow

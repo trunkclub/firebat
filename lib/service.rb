@@ -1,8 +1,10 @@
-require 'modules/uses_http'
+require 'adapters/httparty_adapter'
 
 module Flare
   class Service
-    include UsesHttp
+    def initialize(adapter = HTTPartyAdapter)
+      @_adapter = adapter
+    end
 
     def self.set_headers(headers = {})
       @@_headers = headers
@@ -14,6 +16,14 @@ module Flare
 
     def base_url
       BASE_URL
+    end
+
+    [:post, :get, :put, :patch, :delete].each do |verb|
+      define_method(verb) do |url, body = {}|
+        @_adapter.send(verb, base_url, url, body, headers).tap do |response|
+          Flare.log(response) if DEBUG
+        end
+      end
     end
   end
 end

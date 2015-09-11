@@ -53,4 +53,9 @@ describe Flare do
     expect(logger_double).to receive(:log).at_least(:once)
     GetFlow.run!
   end
+
+  it 'allows http adapter override' do
+    expect(MockAdapter).to receive(:get)
+    HttpOverrideFlow.run!
+  end
 end
