@@ -3,7 +3,17 @@ require 'mocks/mock_service'
 require 'mocks/mock_flows'
 require 'mocks/constants'
 
+module Flare
+  DEBUG = true
+end
+
 describe Flare do
+  let(:logger_double) { double.as_null_object }
+
+  before do
+    Flare.logger = logger_double
+  end
+
   it 'can get' do
     performs_a_get
     GetFlow.run!
@@ -36,5 +46,11 @@ describe Flare do
     performs_a_patch
     performs_a_delete
     CombinedFlow.run!
+  end
+
+  it 'allows logger override' do
+    performs_a_get
+    expect(logger_double).to receive(:log).at_least(:once)
+    GetFlow.run!
   end
 end
