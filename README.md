@@ -74,6 +74,16 @@ class MyProcess < Flare::Process
 end
 ```
 
+## Passing input to a Flow from a Process
+When calling `flow` in a `Process`, a hash can be passed in which will be loaded
+into `input` for the `Flow`.
+```ruby
+class MyProcess < Flare::Process
+  flow MyFlow
+  flow MySecondFlow, foo: 'bar'
+end
+```
+
 ## Chaining Flows in a process
 Any `Flare::Flow` can optionally implement `self.result` and return a hash, which
 will be chained into the next flow defined in a process and available in any step
