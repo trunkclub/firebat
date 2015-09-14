@@ -37,7 +37,7 @@ class AuthenticationService < Flare::Service
 
   def authenticate(options = {})
     post("authenticate", options).tap do |response|
-      self.class.superclass.set_headers({
+      set_headers({
         'Authorization' => "Token token=#{response.fetch('token')}"
       })
     end

@@ -58,4 +58,12 @@ describe Flare do
     expect(MockAdapter).to receive(:get)
     HttpOverrideFlow.run!
   end
+
+  it 'can set headers' do
+    performs_a_get
+    expect(HTTParty).to receive(:post) do |url, params|
+      expect(params.fetch(:headers)).to eq({'foo' => 'bar'})
+    end
+    SetHeadersFlow.run!
+  end
 end

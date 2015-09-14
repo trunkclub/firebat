@@ -6,7 +6,7 @@ module Flare
       @_adapter = adapter
     end
 
-    def self.set_headers(headers = {})
+    def set_headers(headers = {})
       @@_headers = headers
     end
 

@@ -1,6 +1,7 @@
 require 'mocks/constants'
 require 'mocks/mock_service'
 require 'mocks/http_override_service'
+require 'mocks/set_headers_service'
 
 class HttpOverrideFlow < Flare::Flow
   step \
@@ -65,4 +66,14 @@ class CombinedFlow < Flare::Flow
   step \
     MockService,
     :delete_a_thing
+end
+
+class SetHeadersFlow < Flare::Flow
+  step \
+    SetHeadersService,
+    :get_a_thing
+
+  step \
+    SetHeadersService,
+    :post_a_thing
 end
