@@ -170,3 +170,73 @@ Our suggested implementation file structure looks something like this:
 └── services
     └── my_service.rb
 ```
+
+## An Example
+Let's say you have a few different services with different concerns. You'd like
+to log in as a user and add a few items to a cart. What would that look like in
+Flare?
+
+### Logging In
+You'll want to create a service that interfaces with your authentication service.
+```ruby
+class AuthenticationService < Flare::Service
+  def login(username, password)
+    post('/login', {
+      username: username,
+      password: password
+    }).tap do |response|
+      set_headers({
+        'Authorization' => "Token token=#{response.fetch('token')}"
+      })
+    end
+  end
+end
+```
+
+This does a `POST` to `/login` and uses the resultant token as the authorization
+header for future service requests.
+
+### Interacting with a Shopping Cart
+```ruby
+class ShoppingService < Flare::Service
+  def create
+    post('/carts')
+  end
+
+  def add_item(options = {})
+    post("/carts/options.fetch(:cart_id)/items", {
+      sku: options.fetch(:sku)
+    })
+  end
+end
+```
+
+### Creating a Flow
+You likely want to perform these actions one after another, which means you'll
+want to create a `Flow`.
+```ruby
+class AuthenticateAndShopFlow < Flare::Flow
+  step \
+    AuthenticationSvc,
+    :login
+
+  step \
+    ShoppingService,
+    :create,
+    {},
+    :on_cart_created
+
+  step \
+    ShoppingService,
+    :add_item,
+    :add_item_payload
+
+  def on_cart_created(response)
+    @_cart_id = response.fetch('id')
+  end
+
+  def add_item_payload
+    { cart_id: @_cart_id, sku: '123' }
+  end
+end
+```
