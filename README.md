@@ -171,3 +171,20 @@ Flare.logger = FlareLogger
 ## Debug mode
 If `DEBUG=true` appears in your `.env`, Flare will output the result of every
 service call it makes through the adapter.
+
+## Suggested file structure
+Our suggested implementation file structure looks something like this:
+```
+├── Gemfile
+├── Gemfile.lock
+├── flows
+│   └── my_flow.rb
+├── modules
+│   └── logs_in.rb
+├── processes
+│   └── my_process.rb
+├── run.rb
+├── sample.env
+└── services
+    └── my_service.rb
+```
