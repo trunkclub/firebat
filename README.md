@@ -115,7 +115,49 @@ end
 ```
 
 ## Overriding the HTTP Adapter
+In some instances, a particular call will need an extra header or some other
+special behavior. You can extend or completely override the HTTP adapter:
+```ruby
+class MyAdapter < Flare::HTTPartyAdapter
+  def self.put(base_url, url, query = {}, headers)
+    super(base_url, url, query.merge(foo: 'bar'), headers)
+  end
+end
+
+class MyServiceWithAdapter < Flare::Service
+  def initialize
+    super(MyAdapter)
+  end
+
+  def self.to_sym
+    :my_service_with_adapter
+  end
+
+  def put_a_thing
+    put('/a-thing', { arg: 'value' })
+  end
+end
+```
 
 ## Overriding the logger
+Flare's logging can be overridden if you'd like to send it to a service or
+somewhere other than STDOUT.
+```ruby
+class FlareLogger
+  attr_accessor :messages
+
+  def initialize
+    @messages = []
+  end
+
+  def log(message)
+    @messages << message
+  end
+end
+
+Flare.logger = FlareLogger
+```
 
 ## Debug mode
+If `DEBUG=true` appears in your `.env`, Flare will output the result of every
+service call it makes through the adapter.
