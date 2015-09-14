@@ -24,16 +24,16 @@ module Flare
       :with
     ]
 
-    def self.non_behavioral_options(options = {})
+    def non_behavioral_options(options = {})
       options.reject do |k, v|
         KNOWN_BEHAVIOR_KEYS.include?(k)
       end
     end
 
-    def self.resolve(v)
+    def resolve(v)
       if v.is_a?(Flare::Runner)
-        runners[v.service.to_sym] ||= v.service.new
-        runners[v.service.to_sym].send(v.action)
+        self.class.runners[v.service.to_sym] ||= v.service.new
+        self.class.runners[v.service.to_sym].send(v.action)
       elsif v.is_a?(Symbol)
         self.send(v)
       elsif v.respond_to?(:call)
@@ -43,16 +43,16 @@ module Flare
       end
     end
 
-    def self.resolve_options(options)
+    def resolve_options(options)
       options.inject({}) do |h, (k, v)|
         h.merge(k => resolve(v))
       end
     end
 
-    def self.run!(input = {})
+    def run!(input = {})
       @_input = input
 
-      steps.each do |step|
+      self.class.steps.each do |step|
         options = resolve(step.options)
         times = options.fetch(:times, 1).to_i
         with = options.fetch(:with, nil)
@@ -67,7 +67,7 @@ module Flare
         set.send(operation) do |item|
           options = options.merge(item) if operation == :each
           options = resolve_options(non_behavioral_options(options))
-          runner = runners[step.service.to_sym] ||= step.service.new
+          runner = self.class.runners[step.service.to_sym] ||= step.service.new
 
           Flare.log \
             %Q(

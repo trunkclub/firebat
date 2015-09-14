@@ -6,14 +6,14 @@ module Flare
       end
 
       def flow(klass, options = {})
-        flows << { klass: klass, options: options }
+        flows << { instance: klass.new, options: options }
       end
 
       def run!
         prior_result = {}
         flows.each do |flow|
           params = prior_result.merge(flow[:options])
-          prior_result = flow[:klass].send(:run!, params)
+          prior_result = flow[:instance].send(:run!, params) || {}
         end
       end
     end

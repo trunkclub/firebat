@@ -16,27 +16,27 @@ describe Flare do
 
   it 'can get' do
     performs_a_get
-    GetFlow.run!
+    GetFlow.new.run!
   end
 
   it 'can post' do
     performs_a_post
-    PostFlow.run!
+    PostFlow.new.run!
   end
 
   it 'can put' do
     performs_a_put
-    PutFlow.run!
+    PutFlow.new.run!
   end
 
   it 'can patch' do
     performs_a_patch
-    PatchFlow.run!
+    PatchFlow.new.run!
   end
 
   it 'can delete' do
     performs_a_delete
-    DeleteFlow.run!
+    DeleteFlow.new.run!
   end
 
   it 'can execute multiple steps' do
@@ -45,18 +45,18 @@ describe Flare do
     performs_a_put
     performs_a_patch
     performs_a_delete
-    CombinedFlow.run!
+    CombinedFlow.new.run!
   end
 
   it 'allows logger override' do
     performs_a_get
     expect(logger_double).to receive(:log).at_least(:once)
-    GetFlow.run!
+    GetFlow.new.run!
   end
 
   it 'allows http adapter override' do
     expect(MockAdapter).to receive(:get)
-    HttpOverrideFlow.run!
+    HttpOverrideFlow.new.run!
   end
 
   it 'can set headers' do
@@ -64,6 +64,6 @@ describe Flare do
     expect(HTTParty).to receive(:post) do |url, params|
       expect(params.fetch(:headers)).to eq({'foo' => 'bar'})
     end
-    SetHeadersFlow.run!
+    SetHeadersFlow.new.run!
   end
 end
