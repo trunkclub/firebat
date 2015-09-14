@@ -54,10 +54,8 @@ class MyFlow < Flare::Flow
     { foo: 'bar' },
     :on_thing_fetched
 
-  class << self
-    def on_thing_fetched(response)
-      puts response
-    end
+  def on_thing_fetched(response)
+    puts response
   end
 end
 ```
@@ -85,7 +83,7 @@ end
 ```
 
 ## Chaining Flows in a process
-Any `Flare::Flow` can optionally implement `self.result` and return a hash, which
+Any `Flare::Flow` can optionally implement `result` and return a hash, which
 will be chained into the next flow defined in a process and available in any step
 as `@_input`. For instance:
 ```ruby
@@ -95,14 +93,12 @@ class MyFlow < Flare::Flow
     {},
     :on_thing_fetched
 
-  class << self
-    def result
-      { thing: @_thing }
-    end
+  def result
+    { thing: @_thing }
+  end
 
-    def on_thing_fetched(response)
-      @_thing = response
-    end
+  def on_thing_fetched(response)
+    @_thing = response
   end
 end
 
@@ -111,10 +107,8 @@ class MySecondFlow < Flare::Flow
     :post_a_thing,
     :post_thing_params
 
-  class << self
-    def post_thing_params
-      { input: @_input.fetch(:thing) }
-    end
+  def post_thing_params
+    { input: @_input.fetch(:thing) }
   end
 end
 
