@@ -32,8 +32,8 @@ module Flare
 
     def resolve(v)
       if v.is_a?(Flare::Runner)
-        self.class.runners[v.service.to_sym] ||= v.service.new
-        self.class.runners[v.service.to_sym].send(v.action)
+        self.class.runners[v.service.to_s] ||= v.service.new
+        self.class.runners[v.service.to_s].send(v.action)
       elsif v.is_a?(Symbol)
         self.send(v)
       elsif v.respond_to?(:call)
@@ -67,7 +67,7 @@ module Flare
         set.send(operation) do |item|
           options = options.merge(item) if operation == :each
           options = resolve_options(non_behavioral_options(options))
-          runner = self.class.runners[step.service.to_sym] ||= step.service.new
+          runner = self.class.runners[step.service.to_s] ||= step.service.new
 
           Flare.log \
             %Q(

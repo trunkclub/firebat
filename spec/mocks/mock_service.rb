@@ -1,8 +1,4 @@
 class MockService < Flare::Service
-  def self.to_sym
-    :mock_service
-  end
-
   def base_url
     'http://flare.test'
   end

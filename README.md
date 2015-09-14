@@ -16,10 +16,6 @@ A service is a web service or API with one or many endpoints. You can define it
 like so:
 ```ruby
 class MyService < Flare::Service
-  def self.to_sym
-    :my_service
-  end
-
   def get_a_thing(options = {})
     get("/a-thing", options)
   end
@@ -31,10 +27,6 @@ In certain situations (such as authentication), you'll want to send the same set
 of headers to every service. You can override them:
 ```ruby
 class AuthenticationService < Flare::Service
-  def self.to_sym
-    :authentication_service
-  end
-
   def authenticate(options = {})
     post("authenticate", options).tap do |response|
       set_headers({
@@ -131,10 +123,6 @@ end
 class MyServiceWithAdapter < Flare::Service
   def initialize
     super(MyAdapter)
-  end
-
-  def self.to_sym
-    :my_service_with_adapter
   end
 
   def put_a_thing
