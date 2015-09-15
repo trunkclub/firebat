@@ -10,4 +10,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "httparty"
   s.add_dependency "dotenv"
+  s.add_dependency "rake"
 end

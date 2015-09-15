@@ -1,4 +1,4 @@
-module Flare
+module Firebat
   class HTTPartyAdapter
     class << self
       def post(base_url, url, body, headers = {})

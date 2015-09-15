@@ -4,7 +4,7 @@ class MockAdapter
   end
 end
 
-class HttpOverrideService < Flare::Service
+class HttpOverrideService < Firebat::Service
   def initialize
     super(MockAdapter)
   end

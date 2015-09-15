@@ -1,4 +1,4 @@
-module Flare
+module Firebat
   class Process
     class << self
       def flows

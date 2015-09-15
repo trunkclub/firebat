@@ -1,4 +1,4 @@
-class SetHeadersService < Flare::Service
+class SetHeadersService < Firebat::Service
   def self.to_sym
     :mock_service
   end

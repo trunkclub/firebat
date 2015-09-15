@@ -19,7 +19,7 @@ def performs_a_post
   expect(HTTParty).to receive(:post).with(
     "#{MockService.new.base_url}/a-thing",
     hash_including(
-      body: FlareMocks::OPTIONS
+      body: FirebatMocks::OPTIONS
     )
   )
 end
@@ -28,7 +28,7 @@ def performs_a_put
   expect(HTTParty).to receive(:put).with(
     "#{MockService.new.base_url}/a-thing",
     hash_including(
-      body: FlareMocks::OPTIONS
+      body: FirebatMocks::OPTIONS
     )
   )
 end
@@ -37,7 +37,7 @@ def performs_a_patch
   expect(HTTParty).to receive(:patch).with(
     "#{MockService.new.base_url}/a-thing",
     hash_including(
-      body: FlareMocks::OPTIONS
+      body: FirebatMocks::OPTIONS
     )
   )
 end

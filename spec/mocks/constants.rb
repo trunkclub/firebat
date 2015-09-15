@@ -1,4 +1,4 @@
-module FlareMocks
+module FirebatMocks
   OPTIONS = { foo: 'bar' }
 end
 

@@ -1,6 +1,6 @@
 require 'adapters/httparty_adapter'
 
-module Flare
+module Firebat
   class Service
     def initialize(adapter = HTTPartyAdapter)
       @_adapter = adapter
@@ -21,7 +21,7 @@ module Flare
     [:post, :get, :put, :patch, :delete].each do |verb|
       define_method(verb) do |url, body = {}|
         @_adapter.send(verb, base_url, url, body, headers).tap do |response|
-          Flare.log(response) if DEBUG
+          Firebat.log(response) if DEBUG
         end
       end
     end

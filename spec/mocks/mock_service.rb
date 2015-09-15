@@ -1,4 +1,4 @@
-class MockService < Flare::Service
+class MockService < Firebat::Service
   def base_url
     'http://flare.test'
   end

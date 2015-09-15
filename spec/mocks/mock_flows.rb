@@ -3,46 +3,46 @@ require 'mocks/mock_service'
 require 'mocks/http_override_service'
 require 'mocks/set_headers_service'
 
-class HttpOverrideFlow < Flare::Flow
+class HttpOverrideFlow < Firebat::Flow
   step \
     HttpOverrideService,
     :get_a_thing
 end
 
-class GetFlow < Flare::Flow
+class GetFlow < Firebat::Flow
   step \
     MockService,
     :get_a_thing
 end
 
-class PostFlow < Flare::Flow
+class PostFlow < Firebat::Flow
   step \
     MockService,
     :post_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 end
 
-class PutFlow < Flare::Flow
+class PutFlow < Firebat::Flow
   step \
     MockService,
     :put_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 end
 
-class PatchFlow < Flare::Flow
+class PatchFlow < Firebat::Flow
   step \
     MockService,
     :patch_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 end
 
-class DeleteFlow < Flare::Flow
+class DeleteFlow < Firebat::Flow
   step \
     MockService,
     :delete_a_thing
 end
 
-class CombinedFlow < Flare::Flow
+class CombinedFlow < Firebat::Flow
   step \
     MockService,
     :get_a_thing,
@@ -51,24 +51,24 @@ class CombinedFlow < Flare::Flow
   step \
     MockService,
     :post_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 
   step \
     MockService,
     :put_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 
   step \
     MockService,
     :patch_a_thing,
-    FlareMocks::OPTIONS
+    FirebatMocks::OPTIONS
 
   step \
     MockService,
     :delete_a_thing
 end
 
-class SetHeadersFlow < Flare::Flow
+class SetHeadersFlow < Firebat::Flow
   step \
     SetHeadersService,
     :get_a_thing

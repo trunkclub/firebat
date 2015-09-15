@@ -1,10 +1,10 @@
-# Flare
+# Firebat
 
-Flare is a utility for generating smoke tests and integration tests against
+Firebat is a utility for generating smoke tests and integration tests against
 distributed systems.
 
 ## Configuration
-Flare is configured using the Dotenv gem. Any particular settings can be defined
+Firebat is configured using the Dotenv gem. Any particular settings can be defined
 in the .env, like so:
 
 ```
@@ -15,7 +15,7 @@ FOO=bar
 A service is a web service or API with one or many endpoints. You can define it
 like so:
 ```ruby
-class MyService < Flare::Service
+class MyService < Firebat::Service
   def get_a_thing(options = {})
     get("/a-thing", options)
   end
@@ -26,7 +26,7 @@ end
 In certain situations (such as authentication), you'll want to send the same set
 of headers to every service. You can override them:
 ```ruby
-class AuthenticationService < Flare::Service
+class AuthenticationService < Firebat::Service
   def authenticate(options = {})
     post("authenticate", options).tap do |response|
       set_headers({
@@ -40,7 +40,7 @@ end
 ## Defining a Flow
 Flows are a set of API calls that compose a particular business process.
 ```ruby
-class MyFlow < Flare::Flow
+class MyFlow < Firebat::Flow
   step MyService \
     :get_a_thing,
     { foo: 'bar' },
@@ -58,7 +58,7 @@ The options hash and callback may also be defined as lambdas.
 
 ## Defining a Process
 ```ruby
-class MyProcess < Flare::Process
+class MyProcess < Firebat::Process
   flow MyFlow
   flow MySecondFlow
 end
@@ -68,18 +68,18 @@ end
 When calling `flow` in a `Process`, a hash can be passed in which will be loaded
 into `@_input` for the `Flow`.
 ```ruby
-class MyProcess < Flare::Process
+class MyProcess < Firebat::Process
   flow MyFlow
   flow MySecondFlow, foo: 'bar'
 end
 ```
 
 ## Chaining Flows in a process
-Any `Flare::Flow` can optionally implement `result` and return a hash, which
+Any `Firebat::Flow` can optionally implement `result` and return a hash, which
 will be chained into the next flow defined in a process and available in any step
 as `@_input`. For instance:
 ```ruby
-class MyFlow < Flare::Flow
+class MyFlow < Firebat::Flow
   step MyService \
     :get_a_thing,
     {},
@@ -94,7 +94,7 @@ class MyFlow < Flare::Flow
   end
 end
 
-class MySecondFlow < Flare::Flow
+class MySecondFlow < Firebat::Flow
   step MyService \
     :post_a_thing,
     :post_thing_params
@@ -104,7 +104,7 @@ class MySecondFlow < Flare::Flow
   end
 end
 
-class MyProcess < Flare::Process
+class MyProcess < Firebat::Process
   flow MyFlow
   flow MySecondFlow
 end
@@ -114,13 +114,13 @@ end
 In some instances, a particular call will need an extra header or some other
 special behavior. You can extend or completely override the HTTP adapter:
 ```ruby
-class MyAdapter < Flare::HTTPartyAdapter
+class MyAdapter < Firebat::HTTPartyAdapter
   def self.put(base_url, url, query = {}, headers)
     super(base_url, url, query.merge(foo: 'bar'), headers)
   end
 end
 
-class MyServiceWithAdapter < Flare::Service
+class MyServiceWithAdapter < Firebat::Service
   def initialize
     super(MyAdapter)
   end
@@ -132,10 +132,10 @@ end
 ```
 
 ## Overriding the logger
-Flare's logging can be overridden if you'd like to send it to a service or
+Firebat's logging can be overridden if you'd like to send it to a service or
 somewhere other than STDOUT.
 ```ruby
-class FlareLogger
+class Firebat
   attr_accessor :messages
 
   def initialize
@@ -147,11 +147,11 @@ class FlareLogger
   end
 end
 
-Flare.logger = FlareLogger
+Firebat.logger = FirebatLogger
 ```
 
 ## Debug mode
-If `DEBUG=true` appears in your `.env`, Flare will output the result of every
+If `DEBUG=true` appears in your `.env`, Firebat will output the result of every
 service call it makes through the adapter.
 
 ## Suggested file structure
@@ -174,12 +174,12 @@ Our suggested implementation file structure looks something like this:
 ## An Example
 Let's say you have a few different services with different concerns. You'd like
 to log in as a user and add a few items to a cart. What would that look like in
-Flare?
+Firebat?
 
 ### Logging In
 You'll want to create a service that interfaces with your authentication service.
 ```ruby
-class AuthenticationService < Flare::Service
+class AuthenticationService < Firebat::Service
   def login(username, password)
     post('/login', {
       username: username,
@@ -198,7 +198,7 @@ header for future service requests.
 
 ### Interacting with a Shopping Cart
 ```ruby
-class ShoppingService < Flare::Service
+class ShoppingService < Firebat::Service
   def create
     post('/carts')
   end
@@ -215,7 +215,7 @@ end
 You likely want to perform these actions one after another, which means you'll
 want to create a `Flow`.
 ```ruby
-class AuthenticateAndShopFlow < Flare::Flow
+class AuthenticateAndShopFlow < Firebat::Flow
   step \
     AuthenticationSvc,
     :login

@@ -1,17 +1,17 @@
-require './lib/flare'
+require './lib/firebat'
 require 'mocks/mock_service'
 require 'mocks/mock_flows'
 require 'mocks/constants'
 
-module Flare
+module Firebat
   DEBUG = true
 end
 
-describe Flare do
+describe Firebat do
   let(:logger_double) { double.as_null_object }
 
   before do
-    Flare.logger = logger_double
+    Firebat.logger = logger_double
   end
 
   it 'can get' do

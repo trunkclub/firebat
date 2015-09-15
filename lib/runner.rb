@@ -1,4 +1,4 @@
-module Flare
+module Firebat
   class Runner
     attr_reader :service, :action, :options, :block
 

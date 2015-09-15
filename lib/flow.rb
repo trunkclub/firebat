@@ -1,4 +1,4 @@
-module Flare
+module Firebat
   class Flow
     class << self
       def steps
@@ -31,7 +31,7 @@ module Flare
     end
 
     def resolve(v)
-      if v.is_a?(Flare::Runner)
+      if v.is_a?(Firebat::Runner)
         self.class.runners[v.service.to_s] ||= v.service.new
         self.class.runners[v.service.to_s].send(v.action)
       elsif v.is_a?(Symbol)
@@ -69,7 +69,7 @@ module Flare
           options = resolve_options(non_behavioral_options(options))
           runner = self.class.runners[step.service.to_s] ||= step.service.new
 
-          Flare.log \
+          Firebat.log \
             %Q(
               #{'='*100}
               #{runner.to_s} => #{step.action.to_s}

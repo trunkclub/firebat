@@ -1,6 +1,6 @@
 require 'config/load'
 require 'modules/logs_messages'
 
-module Flare
+module Firebat
   extend LogsMessages
 end
