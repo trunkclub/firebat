@@ -1,3 +1,5 @@
+![firebat](https://scunite.files.wordpress.com/2008/03/terran_firebat.gif?w=497)
+
 # Firebat
 
 Firebat is a utility for generating smoke tests and integration tests against
