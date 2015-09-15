@@ -6,9 +6,11 @@ Gem::Specification.new do |s|
   s.authors     = ["Jeff Meyers"]
   s.email       = 'jeff@trunkclub.com'
   s.homepage    = 'http://trunkclub.com/engineering'
-  s.files       = ["lib/firebat.rb"]
+  s.files        = Dir["lib/**/*"]
+  s.require_path = "lib"
 
   s.add_dependency "httparty"
   s.add_dependency "dotenv"
   s.add_dependency "rake"
 end
+
