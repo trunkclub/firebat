@@ -37,7 +37,7 @@ module Firebat
       elsif v.is_a?(Symbol)
         self.send(v)
       elsif v.respond_to?(:call)
-        v.call
+        v.call(self)
       else
         v
       end
