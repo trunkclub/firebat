@@ -1,4 +1,6 @@
 require 'spec_helper'
+ENV['DEBUG'] = 'true'
+ENV['BASE_URL'] = 'http://localhost'
 require './lib/firebat'
 require 'mocks/mock_service'
 require 'mocks/mock_flows'
