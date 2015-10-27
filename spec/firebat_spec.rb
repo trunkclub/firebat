@@ -1,11 +1,8 @@
+require 'spec_helper'
 require './lib/firebat'
 require 'mocks/mock_service'
 require 'mocks/mock_flows'
 require 'mocks/constants'
-
-module Firebat
-  DEBUG = true
-end
 
 describe Firebat do
   let(:logger_double) { double.as_null_object }
