@@ -9,6 +9,12 @@ module Firebat
         flows << { instance: klass.new, options: options }
       end
 
+      def remove_flow(flow_klass)
+        @_flows = flows.reject do |flow|
+          flow[:instance].instance_of?(flow_klass)
+        end
+      end
+
       def run!
         prior_result = {}
         flows.each do |flow|
