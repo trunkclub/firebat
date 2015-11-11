@@ -1,12 +1,35 @@
 module Firebat
   class Flow
+    ENABLE_OVERRIDES = ENV.fetch('ENABLE_OVERRIDES', false)
+    ENABLE_REQUIRED_INPUT = ENV.fetch('ENABLE_REQUIRED_INPUT', false)
+
     class << self
+      def required_inputs
+        @_required_inputs ||= []
+      end
+
+      def overridable_inputs
+        @_overridable_inputs ||= []
+      end
+
       def steps
         @_steps ||= []
       end
 
       def runners
         @_runners ||= {}
+      end
+
+      def required_input(*names)
+        names.each do |name|
+          required_inputs << name
+        end
+      end
+
+      def overridable_input(*names)
+        names.each do |name|
+          overridable_inputs << name
+        end
       end
 
       def step(service, action, options = {}, block = nil)
@@ -49,8 +72,46 @@ module Firebat
       end
     end
 
+    def collect_required_input(input = {})
+      return input unless ENABLE_REQUIRED_INPUT
+      remaining_keys = self.class.required_inputs - input.keys
+      remaining_keys = remaining_keys + input.select do |k,v|
+        v.nil? && self.class.required_inputs.include?(k)
+      end.keys
+      remaining_keys.each do |key|
+        Firebat.collect_input "Value for #{key}?" do |value|
+          input[key] = value
+        end
+      end
+
+      input
+    end
+
+    def collect_override_input(input = {})
+      return input unless ENABLE_OVERRIDES
+
+      self.class.overridable_inputs.each do |key|
+        value = input[key]
+        Firebat.collect_input "Override value for #{key}? (Current: #{value}) (y/n)" do |answer|
+          if answer.downcase == 'y'
+            Firebat.collect_input "Value for #{key}?" do |value|
+              input[value] = value
+            end
+          end
+        end
+      end
+
+      input
+    end
+
+    def collect_input(input = {})
+      input = collect_required_input(input)
+      input = collect_override_input(input)
+      input
+    end
+
     def run!(input = {})
-      @_input = input
+      @_input = collect_input(input)
 
       self.class.steps.each do |step|
         options = resolve(step.options)

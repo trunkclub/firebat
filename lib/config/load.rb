@@ -1,6 +1,7 @@
 require 'httparty'
 require 'dotenv'
 require 'logger'
+require 'collector'
 require 'runner'
 require 'service'
 require 'process'
