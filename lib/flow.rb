@@ -95,7 +95,7 @@ module Firebat
         Firebat.collect_input "Override value for #{key}? (Current: #{value}) (y/n)" do |answer|
           if answer.downcase == 'y'
             Firebat.collect_input "Value for #{key}?" do |value|
-              input[value] = value
+              input[key] = value
             end
           end
         end
