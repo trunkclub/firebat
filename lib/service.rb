@@ -21,7 +21,13 @@ module Firebat
     [:post, :get, :put, :patch, :delete].each do |verb|
       define_method(verb) do |url, body = {}|
         @_adapter.send(verb, base_url, url, body, headers).tap do |response|
-          Firebat.log(response.inspect) if DEBUG
+          if DEBUG
+            if response.success?
+              Firebat.log(response.inspect)
+            else
+              Firebat.log_error(response.inspect)
+            end
+          end
         end
       end
     end
