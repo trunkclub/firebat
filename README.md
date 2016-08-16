@@ -1,4 +1,4 @@
-![firebat](https://scunite.files.wordpress.com/2008/03/terran_firebat.gif?w=497)
+![firebat](http://media.moddb.com/images/mods/1/4/3704/47858.gif)
 
 # Firebat
 
